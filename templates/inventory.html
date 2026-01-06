@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Blood Inventory | BloodCare{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <h3 class="mb-3">Current Blood Stock</h3>
+        {% if stock %}
+            <div class="table-responsive">
+                <table class="table table-striped align-middle">
+                    <thead class="table-danger">
+                        <tr>
+                            <th>Blood Group</th>
+                            <th>Units Available</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in stock %}
+                        <tr>
+                            <td class="fw-bold">{{ item.blood_group }}</td>
+                            <td>{{ item.units_available }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-muted">No stock information. Start by registering donors.</p>
+        {% endif %}
+    </div>
+    <div class="col-lg-4">
+        <div class="info-box">
+            <h5>How inventory works?</h5>
+            <ul class="small text-muted">
+                <li>When a donor is registered, 1 unit is added to that blood group.</li>
+                <li>When an admin approves a request, units are deducted accordingly.</li>
+                <li>Admins can see more details from the dashboard after login.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

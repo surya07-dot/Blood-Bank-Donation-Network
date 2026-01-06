@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}BloodCare | Home{% endblock %}
+{% block content %}
+<div class="row align-items-center g-4 hero-section">
+    <div class="col-md-6">
+        <h1 class="display-5 fw-bold text-danger mb-3">Donate Blood, Save Lives</h1>
+        <p class="lead text-muted">
+            BloodCare is a simple and powerful blood bank management system. Register donors,
+            manage blood stock, and handle urgent blood requests in one responsive web app.
+        </p>
+        <div class="d-flex flex-wrap gap-2 mt-3">
+            <a href="{{ url_for('donor_register') }}" class="btn btn-danger btn-lg">
+                Become a Donor
+            </a>
+            <a href="{{ url_for('request_blood') }}" class="btn btn-outline-danger btn-lg">
+                Request Blood
+            </a>
+            {% if not current_user.is_authenticated %}
+            <a href="{{ url_for('login') }}" class="btn btn-outline-secondary btn-lg">
+                Staff Login
+            </a>
+            {% endif %}
+        </div>
+        <div class="stats mt-4">
+            <div class="row">
+                <div class="col-4">
+                    <div class="stat-card">
+                        <h3 class="mb-0">{{ donors_count }}</h3>
+                        <small class="text-muted">Registered Donors</small>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="stat-card">
+                        <h3 class="mb-0">{{ stock|length }}</h3>
+                        <small class="text-muted">Blood Groups</small>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="stat-card">
+                        <h3 class="mb-0">{{ pending_requests }}</h3>
+                        <small class="text-muted">Pending Requests</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="glass-card">
+            <h4 class="mb-3">Live Blood Stock</h4>
+            {% if stock %}
+                <div class="row row-cols-2 row-cols-md-3 g-3">
+                    {% for item in stock %}
+                    <div class="col">
+                        <div class="blood-chip text-center">
+                            <div class="blood-group">{{ item.blood_group }}</div>
+                            <div class="units">{{ item.units_available }} units</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted">No stock data yet. Register donors to start tracking blood units.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

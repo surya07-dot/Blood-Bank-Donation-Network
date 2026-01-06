@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | BloodCare{% endblock %}
+{% block content %}
+<h3 class="mb-4">Admin Dashboard</h3>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card stat-card-2">
+            <div class="card-body">
+                <h6 class="text-muted text-uppercase small mb-2">Total Donors</h6>
+                <h2>{{ donors|length }}</h2>
+                <p class="small text-muted mb-0">Showing latest 5 donors</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card-2">
+            <div class="card-body">
+                <h6 class="text-muted text-uppercase small mb-2">Pending Requests</h6>
+                <h2>
+                    {{
+                        recent_requests
+                        | selectattr('status', 'equalto', 'Pending')
+                        | list
+                        | length
+                    }}
+                </h2>
+                <p class="small text-muted mb-0">Approve / reject from the list below.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card-2">
+            <div class="card-body">
+                <h6 class="text-muted text-uppercase small mb-2">Blood Groups</h6>
+                <h2>{{ stock|length }}</h2>
+                <p class="small text-muted mb-0">Tracked in this system.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 rounded-4 h-100">
+            <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Recent Donors</h5>
+                <a href="{{ url_for('donor_register') }}" class="btn btn-sm btn-outline-danger">Add Donor</a>
+            </div>
+            <div class="card-body">
+                {% if donors %}
+                    <div class="table-responsive">
+                        <table class="table table-sm align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Blood Group</th>
+                                    <th>City</th>
+                                    <th>Registered On</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for d in donors %}
+                                <tr>
+                                    <td>{{ d.full_name }}</td>
+                                    <td><span class="badge bg-danger-subtle text-danger">{{ d.blood_group }}</span></td>
+                                    <td>{{ d.city }}</td>
+                                    <td>{{ d.created_at.strftime("%d-%m-%Y") }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted small">No donors registered yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 rounded-4 h-100">
+            <div class="card-header bg-white border-0">
+                <h5 class="mb-0">Recent Requests</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_requests %}
+                    <div class="table-responsive">
+                        <table class="table table-sm align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Patient</th>
+                                    <th>Blood</th>
+                                    <th>Units</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for r in recent_requests %}
+                                <tr>
+                                    <td>{{ r.patient_name }}</td>
+                                    <td><span class="badge bg-danger-subtle text-danger">{{ r.blood_group }}</span></td>
+                                    <td>{{ r.units }}</td>
+                                    <td>
+                                        <span class="badge
+                                            {% if r.status == 'Pending' %}
+                                                bg-warning-subtle text-warning
+                                            {% elif r.status == 'Approved' %}
+                                                bg-success-subtle text-success
+                                            {% else %}
+                                                bg-danger-subtle text-danger
+                                            {% endif %}
+                                        ">
+                                            {{ r.status }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if current_user.is_admin and r.status == 'Pending' %}
+                                            <a href="{{ url_for('manage_request', request_id=r.id, action='approve') }}"
+                                               class="btn btn-sm btn-success me-1">
+                                                Approve
+                                            </a>
+                                            <a href="{{ url_for('manage_request', request_id=r.id, action='reject') }}"
+                                               class="btn btn-sm btn-outline-danger">
+                                                Reject
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted small">No action</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted small">No requests submitted yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

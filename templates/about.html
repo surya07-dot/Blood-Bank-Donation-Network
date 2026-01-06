@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}About | BloodCare{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body p-4">
+                <h3 class="mb-3 text-danger">About BloodCare</h3>
+                <p class="text-muted">
+                    BloodCare is a mini project built using <strong>Python (Flask)</strong> with
+                    <strong>PostgreSQL</strong> database and a modern responsive front-end using
+                    <strong>HTML, CSS and JavaScript</strong>.
+                </p>
+                <ul class="text-muted">
+                    <li>Donor registration with contact &amp; blood group details.</li>
+                    <li>Real-time blood stock overview.</li>
+                    <li>Emergency blood request form.</li>
+                    <li>Admin dashboard for staff with login &amp; role-based actions.</li>
+                </ul>
+                <p class="text-muted">
+                    You can run this project in <strong>PyCharm</strong> by installing the requirements
+                    and configuring the PostgreSQL connection in <code>config.py</code>.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

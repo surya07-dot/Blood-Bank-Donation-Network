@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Become a Donor | BloodCare{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body p-4">
+                <h3 class="mb-3 text-center text-danger">Donor Registration</h3>
+                <p class="text-muted small text-center mb-4">
+                    Please fill the form carefully. Your details help us quickly find the right donor in emergencies.
+                </p>
+                <form method="POST" novalidate>
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" name="full_name" class="form-control" required />
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Age</label>
+                            <input type="number" name="age" class="form-control" min="18" max="65" required />
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Gender</label>
+                            <select name="gender" class="form-select" required>
+                                <option value="">Select</option>
+                                <option>Male</option>
+                                <option>Female</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Blood Group</label>
+                            <select name="blood_group" class="form-select" required>
+                                <option value="">Select</option>
+                                <option>A+</option>
+                                <option>A-</option>
+                                <option>B+</option>
+                                <option>B-</option>
+                                <option>O+</option>
+                                <option>O-</option>
+                                <option>AB+</option>
+                                <option>AB-</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Phone</label>
+                            <input type="text" name="phone" class="form-control" required />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Email (optional)</label>
+                            <input type="email" name="email" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">City</label>
+                            <input type="text" name="city" class="form-control" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Last Donated Date (optional)</label>
+                            <input type="date" name="last_donated" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-danger btn-lg">
+                            Submit &amp; Become a Donor
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
