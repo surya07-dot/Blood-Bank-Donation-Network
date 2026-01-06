@@ -242,8 +242,9 @@ def register_routes(app):
         donors = Donor.query.order_by(Donor.created_at.desc()).limit(5).all()
         recent_requests = BloodRequest.query.order_by(BloodRequest.created_at.desc()).limit(5).all()
         stock = BloodStock.query.order_by(BloodStock.blood_group).all()
+        # Use React-powered dashboard
         return render_template(
-            "dashboard.html",
+            "dashboard_react.html",
             donors=donors,
             recent_requests=recent_requests,
             stock=stock,
@@ -275,6 +276,72 @@ def register_routes(app):
         db.session.commit()
         flash(f"Request {action}d successfully.", "success")
         return redirect(url_for("dashboard"))
+
+    # API ENDPOINTS FOR REACT COMPONENTS
+    @app.route("/api/stats")
+    @login_required
+    def api_stats():
+        """Get dashboard statistics for React components"""
+        total_donors = Donor.query.count()
+        total_requests = BloodRequest.query.count()
+        pending_requests = BloodRequest.query.filter_by(status="Pending").count()
+        approved_requests = BloodRequest.query.filter_by(status="Approved").count()
+        
+        return {
+            "total_donors": total_donors,
+            "total_requests": total_requests,
+            "pending_requests": pending_requests,
+            "approved_requests": approved_requests
+        }
+
+    @app.route("/api/blood-stock")
+    def api_blood_stock():
+        """Get blood stock data for React charts"""
+        stock = BloodStock.query.order_by(BloodStock.blood_group).all()
+        return {
+            "stock": [
+                {"blood_group": s.blood_group, "units": s.units_available}
+                for s in stock
+            ]
+        }
+
+    @app.route("/api/recent-donors")
+    @login_required
+    def api_recent_donors():
+        """Get recent donors for React components"""
+        donors = Donor.query.order_by(Donor.created_at.desc()).limit(10).all()
+        return {
+            "donors": [
+                {
+                    "id": d.id,
+                    "full_name": d.full_name,
+                    "blood_group": d.blood_group,
+                    "city": d.city,
+                    "created_at": d.created_at.strftime("%Y-%m-%d %H:%M")
+                }
+                for d in donors
+            ]
+        }
+
+    @app.route("/api/recent-requests")
+    @login_required
+    def api_recent_requests():
+        """Get recent blood requests for React components"""
+        requests = BloodRequest.query.order_by(BloodRequest.created_at.desc()).limit(10).all()
+        return {
+            "requests": [
+                {
+                    "id": r.id,
+                    "patient_name": r.patient_name,
+                    "hospital_name": r.hospital_name,
+                    "blood_group": r.blood_group,
+                    "units": r.units,
+                    "status": r.status,
+                    "created_at": r.created_at.strftime("%Y-%m-%d %H:%M")
+                }
+                for r in requests
+            ]
+        }
 
 
 if __name__ == "__main__":
